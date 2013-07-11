@@ -1,0 +1,208 @@
+*{
+	margin:0;
+	padding:0;
+}
+html,body{
+	-webkit-user-select : none;
+	text-align:center;
+	font-size:12px;
+	font-family:"";
+	color:#666;
+	background:#ddd;
+	line-height:20px;
+	cursor:url(cursor/normal.cur);
+}
+::-webkit-scrollbar-track-piece{
+   background-color:#ddd;
+   -webkit-border-radius:0;
+}
+::-webkit-scrollbar{
+   width:10px;
+}
+::-webkit-scrollbar-thumb{
+   background-color:#999;
+   border-radius:4px;
+}
+::-webkit-scrollbar-thumb:hover{
+   background-color:#999;
+}
+::-webkit-scrollbar-arrow {
+   color:#F00;
+   backgound:#0F0;
+}
+img{
+	padding:0;
+	border:none;
+	line-height:0;
+	font-size:0;
+	margin:0
+}
+.img{
+	font-size:0px;
+	line-height:0px
+}
+ul,li,ol{
+	list-style-type:none;
+	padding:0;
+	margin:0
+}
+a,a:link,a:visited{
+	text-decoration:none;
+	color:#666;
+	cursor:url(cursor/pointer.cur);
+}
+a,a:hover,a:active{
+	text-decoration:underline;
+	color:#666;
+	cursor:url(cursor/pointer.cur);
+}
+.clear{
+	clear:both
+}
+button{
+	width : 60px;
+	height : 30px;
+	background-color : #999;
+	border : 0;
+	border-radius : 3px;
+	cursor:url(cursor/pointer.cur);
+}
+button:hover{
+	background-color : #aaa;
+}
+button:active{
+	background-color : #666;
+}
+canvas{
+	position : relative;
+	-webkit-user-select: none;
+	background-color : white;
+}
+#drawing-pad{
+	float : left;
+	margin : 10px;
+	border-radius : 10px;
+	box-shadow : 0 0 10px rgba(3,3,3,.6);
+}
+.drawing{
+	cursor : url(cursor/drawing.cur);
+}
+.n_drawing{
+	cursor : url(cursor/no.cur);
+}
+.rubber{
+	cursor : url(cursor/rubber.cur);
+}
+.main{
+	overflow : hidden;
+	width : 900px;
+	margin : 50px auto 0;
+}
+input{
+	border-radius : 3px;
+	border : 2px solid #666;
+	padding : 0 1px;
+}
+.time-pad{
+	position : absolute;
+	right : 20px;
+	top : 20px;
+	color : #000;
+}
+.color-pad{
+	float : left;
+	margin : 20px 40px;
+	width : 300px;
+	height : 100px;
+}
+.game-info{
+	float : left;
+	margin : 20px 40px;
+	width : 300px;
+	height : 100px;
+}
+.color-item{
+	float : left;
+	margin : 10px;
+	width : 20px;
+	height : 20px;
+	border-radius : 4px;
+	border : 2px solid #999;
+	cursor:url(cursor/pointer.cur);
+}
+.c-selected{
+	border : 2px solid #222;
+}
+.msgbox{
+	float : left;
+	width : 380px;
+}
+#incomingChatMessages{
+	overflow-y : scroll;
+	width : 320px;
+	height : 200px;
+	margin : 10px 0 20px;
+	padding : 10px 5px;
+	text-align : left;
+	border : 0;
+	border-top : 1px dashed #666;
+	border-bottom : 1px dashed #666;
+	background-color : #ddd;
+	resize : none;
+	cursor : text;
+}
+#outgoingChatMessage{
+	float : left;
+	height : 24px;
+	margin : 3px 0 3px 30px;
+}
+#send{
+	float : left;
+	margin-left : 10px;
+}
+#ready{
+	float : left;
+	margin-left : 10px;
+}
+#cancel{
+	float : left;
+	margin-left : 10px;
+}
+.player-box{
+	overflow : hidden;
+	margin : 30px 10px;
+}
+.player-info{
+	float : left;
+	margin : 10px 10px;
+}
+.player-img{
+	width : 50px;
+	height : 50px;
+	border-radius : 5px;
+	border : 2px solid #bbb;
+	background-image : url(img/touxiang.png);
+	background-size : 50px 50px;
+}
+.player-ready{
+	border : 2px solid #6c3;
+}
+.player-drawing{
+	border : 2px solid #09f;
+}
+.player-name{
+	overflow : hidden;
+	width : 50px;
+	height : 20px;
+	text-align : center;
+	color : #000;
+	font-weight : bolder;
+}
+.player-score{
+	overflow : hidden;
+	width : 50px;
+	height : 20px;
+	text-align : center;
+	color : #000;
+	font-weight : bolder;
+}

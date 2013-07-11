@@ -1,0 +1,41 @@
+<html>
+<head>
+	<script src="jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+	<div class="main">
+		<div style="position : relative;overflow : hidden">
+			<canvas id="drawing-pad" width="500" height="400">
+			</canvas>
+			<div class="time-pad"></div>
+			<div class="color-pad" style="display:none">
+				<div class="color-item" style="background-image : url(img/xpc.png);background-size : 20px 20px;" color-value="#fff"></div>
+				<div class="color-item c-selected" style="background-color : #000" color-value="#000"></div>
+				<div class="color-item" style="background-color : #f00" color-value="#f00"></div>
+				<div class="color-item" style="background-color : #03f" color-value="#03f"></div>
+				<div class="color-item" style="background-color : #c09" color-value="#c09"></div>
+				<div class="color-item" style="background-color : #0f0" color-value="#0f0"></div>
+				<div class="color-item" style="background-color : #f60" color-value="#f60"></div>
+				<div class="color-item" style="background-color : #0fc" color-value="#0fc"></div>
+				<div class="color-item" style="background-color : #ff0" color-value="#ff0"></div>
+				<div class="color-item" style="background-color : #060" color-value="#060"></div>
+				<div class="color-item" style="background-color : #300" color-value="#300"></div>
+				<div class="color-item" style="background-color : #ccc" color-value="#ccc"></div>
+			</div>
+			<div class="game-info"></div>
+			<div class="msgbox">
+				聊天信息:&nbsp;<br/>
+				<textarea id="incomingChatMessages" disabled="disabled"></textarea>
+				<input type="text" id="outgoingChatMessage"/>
+				<button type="button" id="send">发送</button>
+				<button type="button" id="ready">准备</button>
+				<button type="button"id="cancel" style="display:none">取消</button>
+			</div>
+		</div>
+		<div class="player-box"></div>
+	</div>
+</body>
+<script src="/html5.js"></script>
+</html>
