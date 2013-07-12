@@ -28,7 +28,7 @@ $(function(){
 		var name = name ? name : "某某";
 		iosocket.emit('setname',name);
 		var html = $('#incomingChatMessages').text()+"\r";
-		$('#incomingChatMessages').text(html+'Connected');
+		$('#incomingChatMessages').text(html+'已连接，请点击准备按钮准备游戏,当所有玩家准备后，游戏开始!');
 		$('#incomingChatMessages').scrollTop=$('#incomingChatMessages').scrollHeight;
 		iosocket.on('welcome',function(data){
 			//console.log(data);
@@ -44,7 +44,7 @@ $(function(){
 			//收到聊天信息
 			if(data.dataType == websocketGame.CHAT_MESSAGE){
 				var html = $('#incomingChatMessages').text()+"\r";
-				$('#incomingChatMessages').text(html +data.sender+" said: "+data.message);
+				$('#incomingChatMessages').text(html +data.sender+" 说: "+data.message);
 				$('#incomingChatMessages').scrollTop=$('#incomingChatMessages').scrollHeight; 
 			}else if(data.dataType == websocketGame.LINE_SEGMENT){
 				//同步其他玩家的线条
@@ -56,7 +56,7 @@ $(function(){
 					$(".color-pad").hide();
 					$(".game-info").show();
 					var html = $('#incomingChatMessages').text()+"\r";
-					$('#incomingChatMessages').text(html+data.winner+" wins! The answer is '"+data.answer+"' !");
+					$('#incomingChatMessages').text(html+data.winner+" 胜利! 答案是 '"+data.answer+"' !");
 					//$('#ready').show();
 					$('#incomingChatMessages').scrollTop=$('#incomingChatMessages').scrollHeight;
 				}
@@ -82,12 +82,12 @@ $(function(){
 						$('#drawing-pad').removeClass('n_drawing');
 						$('#drawing-pad').addClass('drawing');
 						var html = $('#incomingChatMessages').text()+"\r";
-						$('#incomingChatMessages').text(html+"Your turn to draw,pleas draw '"+data.answer+"' ");
+						$('#incomingChatMessages').text(html+"轮到你画了,你要画的词是 '"+data.answer+"' ");
 						$('#incomingChatMessages').scrollTop=$('#incomingChatMessages').scrollHeight;
 					}else{
 						//其他玩家绘画
 						var html = $('#incomingChatMessages').text()+"\r";
-						$('#incomingChatMessages').text(html+"Game start,Get ready,you hava 1 min to guess");
+						$('#incomingChatMessages').text(html+"游戏开始,你有1分钟的时间来猜词!");
 						$('#incomingChatMessages').scrollTop=$('#incomingChatMessages').scrollHeight;
 						$('#drawing-pad').removeClass('drawing');
 						$('#drawing-pad').addClass('n_drawing');
@@ -98,7 +98,7 @@ $(function(){
 		//失去连接
 		iosocket.on('disconnect', function() {
 			var html = $('#incomingChatMessages').text()+"\r";
-			$('#incomingChatMessages').text(html+'Disconnected');
+			$('#incomingChatMessages').text(html+'连接中断');
 			$('#incomingChatMessages').scrollTop=$('#incomingChatMessages').scrollHeight;
 		});
 		iosocket.on('socketsss',function(data){
@@ -138,11 +138,11 @@ $(function(){
 			for(var key in data.playerinfo){
 				var html = $(".player-box").html();
 				if(key == data.playturn){
-					$(".player-box").html(html + '<div class="player-info"><div class="player-img player-drawing"></div><div class="player-name">'+data.playerinfo[key].id+'</div><div class="player-score">'+data.playerinfo[key].score+'</div></div>');
+					$(".player-box").html(html + '<div class="player-info"><div class="player-img player-drawing"></div><div class="player-name">'+data.playerinfo[key].nickname+'</div><div class="player-score">'+data.playerinfo[key].score+'</div></div>');
 				}else if(data.playerinfo[key].ready == 1){
-					$(".player-box").html(html + '<div class="player-info"><div class="player-img player-ready"></div><div class="player-name">'+data.playerinfo[key].id+'</div><div class="player-score">'+data.playerinfo[key].score+'</div></div>');
+					$(".player-box").html(html + '<div class="player-info"><div class="player-img player-ready"></div><div class="player-name">'+data.playerinfo[key].nickname+'</div><div class="player-score">'+data.playerinfo[key].score+'</div></div>');
 				}else{
-					$(".player-box").html(html + '<div class="player-info"><div class="player-img"></div><div class="player-name">'+data.playerinfo[key].id+'</div><div class="player-score">'+data.playerinfo[key].score+'</div></div>');
+					$(".player-box").html(html + '<div class="player-info"><div class="player-img"></div><div class="player-name">'+data.playerinfo[key].nickname+'</div><div class="player-score">'+data.playerinfo[key].score+'</div></div>');
 				}
 			}
 		});

@@ -17,7 +17,20 @@ var fs = require('fs')
   
 var playerTurn = -1;
 
-var wordsList = ['apple','idea','wisdom','angry','happy','cry','angel','woman','ladygaga','dog','jordan','cat','smile','jump','panda'];
+var wordsList = Array();//['apple','idea','wisdom','angry','happy','cry','angel','woman','ladygaga','dog','jordan','cat','smile','jump','panda'];
+
+fs.readFile('wordlist.txt',function(err,data){
+	if(err){
+		console.log('**********************'+err+'*********************');
+	}else{
+		var str = data.toString();
+		wordsList = str.split('\n');
+		//console.log(wordList);
+	}
+});
+
+
+
 var currentAnswer = undefined;
 
 var currentGameState = WAITING_TO_START;
@@ -104,8 +117,8 @@ socketio.listen(server).on('connection', function (socket) {
 		socket.get('nickname',function(err,name){
 			socket.nickname = name;
 
-			console.log('-----------------'+socket.nickname+'===================');
-			var message = "welcome "+socket.nickname+" joining the party!";
+			//console.log('-----------------'+socket.nickname+'===================');
+			var message = "欢迎 "+socket.nickname+" 加入!";
 			    var data = {};
 			    data.dataType = CHAT_MESSAGE;
 			    data.secder = "Server";
@@ -113,7 +126,8 @@ socketio.listen(server).on('connection', function (socket) {
 			    socket.broadcast.emit('welcome',JSON.stringify(data));
 			    
 			    var socket_info = {};
-			    socket_info.id = socket.nickname;
+			    socket_info.id = socket.id;
+			    socket_info.nickname = socket.nickname;
 			    socket_info.ready = 0;
 			    socket_info.score = 0;
 			    conn_sockets.push(socket_info);
@@ -174,7 +188,7 @@ socketio.listen(server).on('connection', function (socket) {
     });
     
     socket.on('disconnect',function(){
-		remove_socket(socket.nickname);
+		remove_socket(socket.id);
 		console.log(socket.nickname+" has disconnect ! ----------------");
 		sendPlayerInfo(socket);
 	});
@@ -182,12 +196,12 @@ socketio.listen(server).on('connection', function (socket) {
 	
 	socket.on('getReady',function(data){
 		for(var key in conn_sockets){
-			if(conn_sockets[key].id == socket.nickname){
+			if(conn_sockets[key].id == socket.id){
 				if(data == 'ready'){
-					console.log(socket.nickname+' is ready----------');
+					//console.log(socket.nickname+' is ready----------');
 					conn_sockets[key].ready = 1;
 				}else if(data == 'cancel'){
-					console.log(socket.nickname+' is cancel----------');
+					//console.log(socket.nickname+' is cancel----------');
 					conn_sockets[key].ready = 0;
 				}
 				break;
@@ -197,10 +211,11 @@ socketio.listen(server).on('connection', function (socket) {
 			clearScore();
 			console.log('------------is all ready-------');
 			playerTurn = (playerTurn + 1) % conn_sockets.length;
+			//console.log('fffffffffffffffff : '+playerTurn);
 			startGame(socket, playerTurn);
 		}
 		sendPlayerInfo(socket);
-		console.log('---------------------ready ?????????----- : ');
+		//console.log('---------------------ready ?????????----- : ');
 	});
 });
 
@@ -220,7 +235,10 @@ function startGame(socket){
 	gameLogicData1.isPlayerTurn = false;
 	socket.emit('message',JSON.stringify(gameLogicData1));
 	socket.broadcast.emit('message',JSON.stringify(gameLogicData1));
-	
+
+
+
+
 	for(var key in socket.manager.sockets.sockets){
 		if(key == conn_sockets[turning].id){
 			socket.manager.sockets.sockets[key].broadcast.emit('message',JSON.stringify(gameLogicData1));
@@ -264,6 +282,7 @@ function remove_socket(id){
 function isAllReady(){
 	console.log('-----------------check ready---------------');
 	console.log('-------check : ',conn_sockets);
+	if(conn_sockets.length < 2) return 0;
 	var isReady = 1;
 	for(var key in conn_sockets){
 		isReady *= conn_sockets[key].ready;
@@ -288,13 +307,13 @@ function nextTurn(socket){
 	var data={};
 	if(playerTurn == 0){
 		playerTurn = -1;
-		data.msg = 'Game Over! please ready!';
+		data.msg = '游戏结束! 请重新准备!';
 		data.isOver = true;
 		clearReady();
 		currentGameState = WAITING_TO_START;
 		sendPlayerInfo(socket);
 	}else{
-		data.msg = '5 second to next!';
+		data.msg = '5秒钟后下一位!';
 		data.isOver = false;
 		console.log('--------------------next time out---------------');
 		var nextTimeout = setTimeout(startGame, 5*1000, socket, playerTurn);
@@ -316,7 +335,7 @@ function getScore(socket){
 		if(index == playerTurn){
 			conn_sockets[index].score += 2;
 		}
-		if(conn_sockets[index].id == socket.nickname){
+		if(conn_sockets[index].id == socket.id){
 			conn_sockets[index].score += 1;
 		}
 	}
@@ -325,7 +344,7 @@ function getScore(socket){
 
 function isPlayer(socket){
 	for(var index in conn_sockets){
-		if(conn_sockets[index].id == socket.nickname){
+		if(conn_sockets[index].id == socket.id){
 			if(index == playerTurn)
 				return true;
 			return false;
