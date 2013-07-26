@@ -104,6 +104,8 @@ var server = http.createServer(function(req, res) {
 });
  
 socketio.listen(server).on('connection', function (socket) {
+
+   
 	
 	//console.log('server : ',server);
 	//console.log('socketio : ',socketio);
@@ -207,7 +209,7 @@ socketio.listen(server).on('connection', function (socket) {
 				break;
 			}
 		}
-		if(isAllReady()){
+		if(isAllReady() && currentGameState == WAITING_TO_START){
 			clearScore();
 			console.log('------------is all ready-------');
 			playerTurn = (playerTurn + 1) % conn_sockets.length;
@@ -257,7 +259,7 @@ function startGame(socket){
 		var gameLogicData = {};
 		gameLogicData.dataType = GAME_LOGIC;
 		gameLogicData.gameState = GAME_OVER;
-		gameLogicData.winner = "No one";
+		gameLogicData.winner = "时间到！\n没有人";
 		gameLogicData.answer = currentAnswer;
 		socket.emit('message',JSON.stringify(gameLogicData));
 		socket.broadcast.emit('message',JSON.stringify(gameLogicData));
@@ -281,7 +283,7 @@ function remove_socket(id){
 
 function isAllReady(){
 	console.log('-----------------check ready---------------');
-	console.log('-------check : ',conn_sockets);
+	//console.log('-------check : ',conn_sockets);
 	if(conn_sockets.length < 2) return 0;
 	var isReady = 1;
 	for(var key in conn_sockets){
