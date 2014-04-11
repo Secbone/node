@@ -47,7 +47,7 @@ var server = http.createServer(function(req, res) {
 		pathname += "index.html";
 	}
 
-	path.exists(pathname, function (exists) {
+	fs.exists(pathname, function (exists) {
 		if (exists) {
 			switch (path.extname(pathname)) {
 			case ".html":
@@ -161,6 +161,7 @@ socketio.listen(server).on('connection', function (socket) {
 		
 		if(data.dataType == CHAT_MESSAGE){
 			//console.log('game_state : '+currentGameState+" Message : "+data.message+" Answer: "+currentAnswer+"------------------------");
+			//玩家回答正确
 			if(currentGameState == GAME_START && data.message == currentAnswer){
 				if(isPlayer(socket)){
 				}else{
