@@ -19,7 +19,7 @@ var websocketGame = {
 }
 
 var scrolltimer = setInterval(function()
-      {$('#incomingChatMessages').get(0).scrollTop+=15;}, 100);
+	  {$('#incomingChatMessages').get(0).scrollTop+=15;}, 100);
 
 
 var timer;
@@ -36,8 +36,8 @@ $(function(){
 		var html = $('#incomingChatMessages').text()+"\r";
 		$('#incomingChatMessages').text(html+'已连接，请点击准备按钮准备游戏,当所有玩家准备后，游戏开始!');
 
-      readytimeout =
-      setTimeout(function(){iosocket.emit('getReady','ready');$('#ready').hide();$('#cancel').show();},60000);
+	  readytimeout =
+	  setTimeout(function(){iosocket.emit('getReady','ready');$('#ready').hide();$('#cancel').show();},10000);
 
 		$('#incomingChatMessages').scrollTop=$('#incomingChatMessages').scrollHeight;
 		iosocket.on('welcome',function(data){
@@ -137,9 +137,9 @@ $(function(){
 				$('#ready').show();
 				clearTimeout(timer);
 				$('.time-pad').html("");
-            readytimeout =
-             setTimeout(function(){iosocket.emit('getReady','ready');$('#ready').
-                hide();$('#cancel').show();},60000);
+				readytimeout =
+				setTimeout(function(){iosocket.emit('getReady','ready');$('#ready').
+					hide();$('#cancel').show();},10000);
 			}else{
 				//5秒延时
 				showTime(5);
@@ -150,13 +150,13 @@ $(function(){
 			$(".player-box").html('');
 			for(var key in data.playerinfo){
 				var html = $(".player-box").html();
-				if(key == data.playturn){
-					$(".player-box").html(html + '<div class="player-info"><div class="player-img player-drawing"></div><div class="player-name">'+data.playerinfo[key].nickname+'</div><div class="player-score">'+data.playerinfo[key].score+'</div></div>');
+				var statusClass = '';
+				if(data.playerinfo[key].isTurn == 1){
+					statusClass = ' player-drawing ';
 				}else if(data.playerinfo[key].ready == 1){
-					$(".player-box").html(html + '<div class="player-info"><div class="player-img player-ready"></div><div class="player-name">'+data.playerinfo[key].nickname+'</div><div class="player-score">'+data.playerinfo[key].score+'</div></div>');
-				}else{
-					$(".player-box").html(html + '<div class="player-info"><div class="player-img"></div><div class="player-name">'+data.playerinfo[key].nickname+'</div><div class="player-score">'+data.playerinfo[key].score+'</div></div>');
+					statusClass = ' player-ready ';
 				}
+				$(".player-box").html(html + '<div class="player-info"><div class="player-img '+statusClass+' "></div><div class="player-name">'+data.playerinfo[key].nickname+'</div><div class="player-score">'+data.playerinfo[key].score+'</div></div>');
 			}
 		});
 		
@@ -176,7 +176,7 @@ $(function(){
 	
 	function sendMessage(){
 		var message = $('#outgoingChatMessage').val();
-      if(!message) return;
+	  if(!message) return;
 		var data = {};
 		data.dataType = websocketGame.CHAT_MESSAGE;
 		data.message = message;
@@ -229,14 +229,14 @@ $(function(){
 		iosocket.emit('getReady','ready');
 		$('#ready').hide();
 		$('#cancel').show();
-      clearTimeout(readytimeout);
+		clearTimeout(readytimeout);
 	});
 	
 	$('#cancel').click(function(){
 		iosocket.emit('getReady','cancel');
 		$('#ready').show();
 		$('#cancel').hide();
-      readytimeout = setTimeout(function(){iosocket.emit('getReady','ready');$('#ready').hide();$('#cancel').show();},60000);
+		readytimeout = setTimeout(function(){iosocket.emit('getReady','ready');$('#ready').hide();$('#cancel').show();},10000);
 	});
 	
 	$(".color-item").click(function(){
@@ -282,12 +282,12 @@ var _st = setTimeout;
 //fRef 是test函数,mDelay是时间
 setTimeout = function(fRef, mDelay) {
    if(typeof fRef == 'function'){ 
-       var argu = Array.prototype.slice.call(arguments,2);
-       var f = (
-            function(){
-                fRef.apply(null, argu);
-            }); 
-       return _st(f, mDelay);
-    }
-    return _st(fRef,mDelay);
+	   var argu = Array.prototype.slice.call(arguments,2);
+	   var f = (
+			function(){
+				fRef.apply(null, argu);
+			}); 
+	   return _st(f, mDelay);
+	}
+	return _st(fRef,mDelay);
 }
