@@ -10,10 +10,10 @@ var GAME_RESTART = 3;
 var conn_sockets = new Array();
 
 var fs = require('fs')
-    , http = require('http')
-    ,url = require('url')
-    ,path = require('path')
-    , socketio = require('socket.io');
+	, http = require('http')
+	,url = require('url')
+	,path = require('path')
+	, socketio = require('socket.io');
   
 var playerTurn = -1;
 
@@ -40,67 +40,67 @@ var gameOverTimeOut;
 var server = http.createServer(function(req, res) {
 	
 	var pathname = __dirname + url.parse(req.url).pathname;
-    if (path.extname(pathname) == "") {
-        pathname += "/";
-    }
-    if (pathname.charAt(pathname.length - 1) == "/") {
-        pathname += "index.html";
-    }
+	if (path.extname(pathname) == "") {
+		pathname += "/";
+	}
+	if (pathname.charAt(pathname.length - 1) == "/") {
+		pathname += "index.html";
+	}
 
-    path.exists(pathname, function (exists) {
-        if (exists) {
-            switch (path.extname(pathname)) {
-            case ".html":
-                res.writeHead(200, {
-                    "Content-Type": "text/html"
-                });
-                break;
-            case ".js":
-                res.writeHead(200, {
-                    "Content-Type": "text/javascript"
-                });
-                break;
-            case ".css":
-                res.writeHead(200, {
-                    "Content-Type": "text/css"
-                });
-                break;
-            case ".gif":
-                res.writeHead(200, {
-                    "Content-Type": "image/gif"
-                });
-                break;
-            case ".jpg":
-                res.writeHead(200, {
-                    "Content-Type": "image/jpeg"
-                });
-                break;
-            case ".png":
-                res.writeHead(200, {
-                    "Content-Type": "image/png"
-                });
-                break;
-            default:
-                res.writeHead(200, {
-                    "Content-Type": "application/octet-stream"
-                });
-            }
+	path.exists(pathname, function (exists) {
+		if (exists) {
+			switch (path.extname(pathname)) {
+			case ".html":
+				res.writeHead(200, {
+					"Content-Type": "text/html"
+				});
+				break;
+			case ".js":
+				res.writeHead(200, {
+					"Content-Type": "text/javascript"
+				});
+				break;
+			case ".css":
+				res.writeHead(200, {
+					"Content-Type": "text/css"
+				});
+				break;
+			case ".gif":
+				res.writeHead(200, {
+					"Content-Type": "image/gif"
+				});
+				break;
+			case ".jpg":
+				res.writeHead(200, {
+					"Content-Type": "image/jpeg"
+				});
+				break;
+			case ".png":
+				res.writeHead(200, {
+					"Content-Type": "image/png"
+				});
+				break;
+			default:
+				res.writeHead(200, {
+					"Content-Type": "application/octet-stream"
+				});
+			}
 
-            fs.readFile(pathname, function (err, data) {
-                res.end(data);
-            });
-        }else {
-            res.writeHead(404, {
-                "Content-Type": "text/html"
-            });
-            res.end("<h1>404 Not Found</h1>");
-        }
-    });
+			fs.readFile(pathname, function (err, data) {
+				res.end(data);
+			});
+		}else {
+			res.writeHead(404, {
+				"Content-Type": "text/html"
+			});
+			res.end("<h1>404 Not Found</h1>");
+		}
+	});
 }).listen(8080, function() {
-    console.log('Listening at: http://localhost:8080');
-    //console.log('--------------------------------------------------------');
-    //console.log('connections : ',socket.manager.connected);
-    //console.log('--------------------------------------------------------');
+	console.log('Listening at: http://localhost:8080');
+	//console.log('--------------------------------------------------------');
+	//console.log('connections : ',socket.manager.connected);
+	//console.log('--------------------------------------------------------');
 });
  
 socketio.listen(server).on('connection', function (socket) {
@@ -121,39 +121,39 @@ socketio.listen(server).on('connection', function (socket) {
 
 			//console.log('-----------------'+socket.nickname+'===================');
 			var message = "欢迎 "+socket.nickname+" 加入!";
-			    var data = {};
-			    data.dataType = CHAT_MESSAGE;
-			    data.secder = "Server";
-			    data.message = message;
-			    socket.broadcast.emit('welcome',JSON.stringify(data));
-			    
-			    var socket_info = {};
-			    socket_info.id = socket.id;
-			    socket_info.nickname = socket.nickname;
-			    socket_info.ready = 0;
-			    socket_info.score = 0;
-			    conn_sockets.push(socket_info);
-			    
-			    sendPlayerInfo(socket);
+			var data = {};
+			data.dataType = CHAT_MESSAGE;
+			data.secder = "Server";
+			data.message = message;
+			socket.broadcast.emit('welcome',JSON.stringify(data));
+			
+			var socket_info = {};
+			socket_info.id = socket.id;
+			socket_info.nickname = socket.nickname;
+			socket_info.ready = 0;
+			socket_info.score = 0;
+			conn_sockets.push(socket_info);
+			
+			sendPlayerInfo(socket);
 		});
 	});
 	
 
-    
-    
-    //发送游戏状态给所有玩家
-    var gameLogicData = {};
-    gameLogicData.dataType = GAME_LOGIC;
-    gameLogicData.gameState = WAITING_TO_START;
-    socket.emit('message',JSON.stringify(gameLogicData));
-    socket.broadcast.emit('message',JSON.stringify(gameLogicData));
-    
+	
+	
+	//发送游戏状态给所有玩家
+	var gameLogicData = {};
+	gameLogicData.dataType = GAME_LOGIC;
+	gameLogicData.gameState = WAITING_TO_START;
+	socket.emit('message',JSON.stringify(gameLogicData));
+	socket.broadcast.emit('message',JSON.stringify(gameLogicData));
+	
   
-    
-    socket.on('message', function (msg) {
-        //console.log('Message Received: ', msg);
-        var data = JSON.parse(msg);
-        if(data.dataType == CHAT_MESSAGE){
+	
+	socket.on('message', function (msg) {
+		//console.log('Message Received: ', msg);
+		var data = JSON.parse(msg);
+		if(data.dataType == CHAT_MESSAGE){
 			data.sender = socket.nickname;
 			
 		}
@@ -186,10 +186,10 @@ socketio.listen(server).on('connection', function (socket) {
 		}
 		
 		//var displayMessage = socket.nickname + " says: " + msg;
-        //socket.broadcast.emit('message', displayMessage);
-    });
-    
-    socket.on('disconnect',function(){
+		//socket.broadcast.emit('message', displayMessage);
+	});
+	
+	socket.on('disconnect',function(){
 		remove_socket(socket.id);
 		console.log(socket.nickname+" has disconnect ! ----------------");
 		sendPlayerInfo(socket);
@@ -359,12 +359,12 @@ var _st = setTimeout;
 //fRef 是test函数,mDelay是时间
 setTimeout = function(fRef, mDelay) {
    if(typeof fRef == 'function'){ 
-       var argu = Array.prototype.slice.call(arguments,2);
-       var f = (
-            function(){
-                fRef.apply(null, argu);
-            }); 
-       return _st(f, mDelay);
-    }
-    return _st(fRef,mDelay);
+	   var argu = Array.prototype.slice.call(arguments,2);
+	   var f = (
+			function(){
+				fRef.apply(null, argu);
+			}); 
+	   return _st(f, mDelay);
+	}
+	return _st(fRef,mDelay);
 }
