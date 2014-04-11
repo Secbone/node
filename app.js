@@ -10,11 +10,12 @@ var GAME_RESTART = 3;
 var conn_sockets = new Array();
 
 var fs = require('fs')
-	, http = require('http')
+	,http = require('http')
 	,url = require('url')
 	,path = require('path')
-	, socketio = require('socket.io');
-  
+	,express = require('express')
+	,socketio = require('socket.io');
+var app = express();
 //var playerTurn = -1;
 
 var wordsList = Array();//['apple','idea','wisdom','angry','happy','cry','angel','woman','ladygaga','dog','jordan','cat','smile','jump','panda'];
@@ -37,7 +38,7 @@ var currentGameState = WAITING_TO_START;
 
 var gameOverTimeOut;
  
-var server = http.createServer(function(req, res) {
+/*var server = http.createServer(function(req, res) {
 	
 	var pathname = __dirname + url.parse(req.url).pathname;
 	if (path.extname(pathname) == "") {
@@ -101,7 +102,14 @@ var server = http.createServer(function(req, res) {
 	//console.log('--------------------------------------------------------');
 	//console.log('connections : ',socket.manager.connected);
 	//console.log('--------------------------------------------------------');
+});*/
+var server = http.createServer(app).listen(8080, function(){
+	console.log('Listening at: http://localhost:8080');
 });
+app.get('/', function (req, res) {
+	res.sendfile(__dirname + '/index.html');
+});
+app.use(express.static(__dirname + '/'));
  
 socketio.listen(server).on('connection', function (socket) {
 
