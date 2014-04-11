@@ -190,7 +190,7 @@ socketio.listen(server).on('connection', function (socket) {
 	});
 	
 	socket.on('disconnect',function(){
-		remove_socket(socket.id);
+		remove_socket(socket);
 		console.log(socket.nickname+" has disconnect ! ----------------");
 		sendPlayerInfo(socket);
 	});
@@ -273,10 +273,25 @@ function startGame(socket){
 	currentGameState = GAME_START;
 }
 
-function remove_socket(id){
+function remove_socket(socket){
 	for(var index in conn_sockets){
-		if(conn_sockets[index].id == id){
-			conn_sockets.splice(index,1);
+		if(conn_sockets[index].id == socket.id){
+			if(conn_sockets[index].isTurn == 1){
+				var gameLogicData = {};
+				gameLogicData.dataType = GAME_LOGIC;
+				gameLogicData.gameState = GAME_OVER;
+				gameLogicData.winner = socket.nickname+"离开!\n没有人";
+				gameLogicData.answer = currentAnswer;
+				socket.broadcast.emit('message',JSON.stringify(gameLogicData));
+				socket.emit('message',JSON.stringify(gameLogicData));
+				
+				//currentGameState = WAITING_TO_START;
+				//conn_sockets.splice(index,1);
+				nextTurn(socket, index);
+				clearTimeout(gameOverTimeOut);
+			}else{
+				conn_sockets.splice(index,1);
+			}
 			break;
 		}
 	}
@@ -309,26 +324,31 @@ function nextTurn(socket){
 	//playerTurn = (playerTurn + 1) % conn_sockets.length;
 	var nowTurn;
 	var data = {};
-	for(var index in conn_sockets){
-		if(conn_sockets[index].isTurn){
-			nowTurn = index;
-			conn_sockets[index].isTurn = 0;
-			if(index+1 < conn_sockets.length){
-				var next = parseInt(index)+1;
-				conn_sockets[next].isTurn = 1;
-				data.msg = '5秒钟后下一位!';
-				data.isOver = false;
-				console.log('--------------------next time out---------------');
-				var nextTimeout = setTimeout(startGame, 5*1000, socket, next);
-			}else{
-				data.msg = '游戏结束! 请重新准备!';
-				data.isOver = true;
-				clearReady();
-				currentGameState = WAITING_TO_START;
-				sendPlayerInfo(socket);
+	if(arguments[1]){
+		conn_sockets.splice(arguments[1],1);
+		nowTurn = arguments[1] - 1;
+	}else{
+		for(var index in conn_sockets){
+			if(conn_sockets[index].isTurn){
+				nowTurn = index;
+				conn_sockets[index].isTurn = 0;
+				break;
 			}
-			break;
 		}
+	}
+	if(nowTurn+1 < conn_sockets.length){
+		var next = parseInt(nowTurn)+1;
+		conn_sockets[next].isTurn = 1;
+		data.msg = '5秒钟后下一位!';
+		data.isOver = false;
+		console.log('--------------------next time out---------------');
+		var nextTimeout = setTimeout(startGame, 5*1000, socket, next);
+	}else{
+		data.msg = '游戏结束! 请重新准备!';
+		data.isOver = true;
+		clearReady();
+		currentGameState = WAITING_TO_START;
+		sendPlayerInfo(socket);
 	}
 	socket.emit('endmsg',JSON.stringify(data));
 	socket.broadcast.emit('endmsg',JSON.stringify(data));
@@ -377,4 +397,15 @@ setTimeout = function(fRef, mDelay) {
 	   return _st(f, mDelay);
 	}
 	return _st(fRef,mDelay);
+}
+
+//定义判空
+function isEmpty(obj) {
+	if (obj == null) return true;
+	if (obj.length && obj.length > 0)    return false;
+	if (obj.length === 0)  return true;
+	for (var key in obj) {
+		if (hasOwnProperty.call(obj, key)) return false;
+	}
+	return true;
 }
