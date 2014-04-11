@@ -10,7 +10,7 @@ html,body{
 	color:#666;
 	background:#ddd;
 	line-height:20px;
-	cursor:url(cursor/normal.cur);
+	cursor:url(cursor/normal.cur), auto;
 }
 ::-webkit-scrollbar-track-piece{
    background-color:#ddd;
@@ -49,12 +49,12 @@ ul,li,ol{
 a,a:link,a:visited{
 	text-decoration:none;
 	color:#666;
-	cursor:url(cursor/pointer.cur);
+	cursor:url(cursor/pointer.cur), auto;
 }
 a,a:hover,a:active{
 	text-decoration:underline;
 	color:#666;
-	cursor:url(cursor/pointer.cur);
+	cursor:url(cursor/pointer.cur), auto;
 }
 .clear{
 	clear:both
@@ -65,7 +65,7 @@ button{
 	background-color : #999;
 	border : 0;
 	border-radius : 3px;
-	cursor:url(cursor/pointer.cur);
+	cursor:url(cursor/pointer.cur), auto;
 }
 button:hover{
 	background-color : #aaa;
@@ -85,13 +85,13 @@ canvas{
 	box-shadow : 0 0 10px rgba(3,3,3,.6);
 }
 .drawing{
-	cursor : url(cursor/drawing.cur);
+	cursor : url(cursor/drawing.cur), auto;
 }
 .n_drawing{
-	cursor : url(cursor/no.cur);
+	cursor : url(cursor/no.cur), auto;
 }
 .rubber{
-	cursor : url(cursor/rubber.cur);
+	cursor : url(cursor/rubber.cur), auto;
 }
 .main{
 	overflow : hidden;
@@ -128,7 +128,7 @@ input{
 	height : 20px;
 	border-radius : 4px;
 	border : 2px solid #999;
-	cursor:url(cursor/pointer.cur);
+	cursor:url(cursor/pointer.cur), auto;
 }
 .c-selected{
 	border : 2px solid #222;
